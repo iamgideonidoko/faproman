@@ -15,7 +15,6 @@
         }
     ],
     "require": {
-        "altorouter/altorouter": "^2.0",
-        "webmozart/assert": "^1.11"
+        "altorouter/altorouter": "^2.0"
     }
 }

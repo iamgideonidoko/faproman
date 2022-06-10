@@ -1,20 +1,27 @@
-<?php
-use Webmozart\Assert\Assert;
+<?php 
+if (isset($_SESSION['login_errors'])) {
+    $loginErrors = $_SESSION['login_errors'];
+    unset($_SESSION['login_errors']);
+}
 ?>
+
 <div class="container my-5 text-center">
     <h2>Login to Faproman</h1>
         <p>You must login to manage your projects</p>
-        <?php 
-        
-        try {
-            echo Assert::string('10', 'No be you go tell me wetin I go');
-        } catch (Exception $e) {
-            echo 'Caught exception: ',  $e->getMessage(), "\n";
-        }
-
-        ?>
-
-        <form class="text-start mx-auto mt-3" style="max-width: 400px;">
+        <form method="post" action="/user/authenticate" class="text-start mx-auto mt-3" style="max-width: 400px;">
+            <?php
+            if (isset($loginErrors) && !empty($loginErrors)) {
+            ?>
+                <div class="form-error-box">
+                    <?php
+                    foreach ($loginErrors as $value) {
+                        echo $value . '<br>';
+                    } 
+                    ?>
+                </div>
+            <?php
+            }
+            ?>
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
                 <input type="text" required class="form-control" name="username" id="username">

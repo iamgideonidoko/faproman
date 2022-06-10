@@ -1,16 +1,32 @@
+<?php 
+if (isset($_SESSION['register_errors'])) {
+    $regErrors = $_SESSION['register_errors'];
+    unset($_SESSION['register_errors']);
+}
+?>
+
 <div class="container my-5 text-center">
-    <h2>Sign Up</h1>
+    <h2>Sign Up to Faproman</h1>
         <p>Sign up a new Faproman account</p>
 
+
         <form class="text-start mx-auto mt-3" method="post" action="/user/create" style="max-width: 400px;">
+            <?php
+            if (isset($regErrors) && !empty($regErrors)) {
+            ?>
+                <div class="form-error-box">
+                    <?php
+                    foreach ($regErrors as $value) {
+                        echo $value . '<br>';
+                    } 
+                    ?>
+                </div>
+            <?php
+            }
+            ?>
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
                 <input type="text" required class="form-control" name="username" id="username">
-            </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">Email address</label>
-                <input type="email" required class="form-control" name="email" id="email" aria-describedby="emailHelp">
-                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
             </div>
             <div class="mb-3">
                 <label for="password1" class="form-label">Password</label>

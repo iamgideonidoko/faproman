@@ -2,7 +2,7 @@
 session_start();
 /**
  * Autoload classes
- * */ 
+ */ 
 require __DIR__ . '/../vendor/autoload.php';
 
 use \App\Controller\ProjectController;
@@ -16,6 +16,7 @@ $router->addRoutes(array(
     array('GET','/login', array(new UserController, 'login')),
     array('GET','/register', array(new UserController, 'register')),
     array('POST','/user/create', array(new UserController, 'create')),
+    array('POST','/user/authenticate', array(new UserController, 'authenticate')),
 ));
 
 /* Match the current request */
