@@ -15,6 +15,7 @@ $router->addRoutes(array(
     array('GET','/', array(new ProjectController, 'index')),
     array('GET','/login', array(new UserController, 'login')),
     array('GET','/register', array(new UserController, 'register')),
+    array('POST','/user/create', array(new UserController, 'create')),
 ));
 
 /* Match the current request */
