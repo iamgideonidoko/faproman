@@ -1,8 +1,12 @@
 <?php 
+use \App\Lib\Fauna;
+
 if (isset($_SESSION['login_errors'])) {
     $loginErrors = $_SESSION['login_errors'];
     unset($_SESSION['login_errors']);
 }
+
+var_dump(Fauna::getAllUsers());
 ?>
 
 <div class="container my-5 text-center">
