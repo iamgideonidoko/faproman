@@ -94,6 +94,27 @@ class Fauna {
             return $e->getMessage();
         }
     }
+
+    public static function createNewProject(string $userId, string $name, string $description, bool $completed): string | object {
+        try {
+            $mutation = (new Mutation('createProject'))
+                ->setArguments(['data' => new RawObject('{name: "' . $name . '", description: "' . $description . '", completed: ' . $completed . ', owner: { connect: "' . $userId . '" } }')])
+                // ->setArguments(['data' => ['name' => $name, 'description' => $description, 'completed' => $completed, 'owner' => new RawObject('{ connect: "' . $userId . '" }')]])
+                ->setSelectionSet(
+                    [
+                        '_id',
+                        '_ts',
+                        'name',
+                        'description',
+                        'completed'
+                    ]
+                );
+            $result = self::getClient()->runQuery($mutation);
+            return $result->getData()->createUser;
+        } catch(Exception $e) {
+            return $e->getMessage();
+        }
+    }
 }
 
 

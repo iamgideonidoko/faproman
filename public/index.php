@@ -33,6 +33,9 @@ $router->addRoutes(array(
     array('GET','/logout', array(new UserController, 'logout')),
     array('POST','/user/create', array(new UserController, 'create')),
     array('POST','/user/authenticate', array(new UserController, 'authenticate')),
+    array('POST','/project/create', array(new ProjectController, 'create')),
+    array('POST','/project/update', array(new ProjectController, 'update')),
+    array('POST','/project/delete', array(new ProjectController, 'delete')),
 ));
 
 /* Match the current request */

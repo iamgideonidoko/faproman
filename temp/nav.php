@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container-fluid px-4">
         <a class="navbar-brand" href="/">Faproman</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
