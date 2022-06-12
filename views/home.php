@@ -1,4 +1,6 @@
 <?php
+use \App\Lib\Fauna;
+
 if (!isset($_SESSION['logged_in_user'])) {
     header('Location: /login');
 }
@@ -9,7 +11,7 @@ if (isset($_SESSION['project_errors'])) {
     unset($_SESSION['project_errors']);
 }
 
-var_dump($loggedInUser);
+$userProjects = Fauna::getProjectsByUser($loggedInUser->_id);
 ?>
 
 <div class="container my-3">
@@ -19,29 +21,30 @@ var_dump($loggedInUser);
         <?php
         if (isset($projectErrors) && !empty($projectErrors)) {
         ?>
-            <div class="form-error-box">
-                <?php
+        <div class="form-error-box">
+            <?php
                 foreach ($projectErrors as $value) {
                     echo $value . '<br>';
                 } 
                 ?>
-            </div>
+        </div>
         <?php
         }
         ?>
         <div class="form-floating mb-3">
-            <input type="text" required class="form-control" id="floatingInput" name="name" placeholder="Name of project">
+            <input type="text" required class="form-control" id="floatingInput" name="name"
+                placeholder="Name of project">
             <label for="name">Project Name</label>
         </div>
         <div class="form-floating">
-            <textarea required class="form-control" placeholder="Enter project description here..." name="description" id="description"
-                style="height: 100px"></textarea>
+            <textarea required class="form-control" placeholder="Enter project description here..." name="description"
+                id="description" style="height: 100px"></textarea>
             <label for="description">Description</label>
         </div>
         <div class="form-check mt-2">
             <input class="form-check-input" type="checkbox" name="completed" id="completed">
             <label class="form-check-label" for="completed">
-               Completed
+                Completed
             </label>
         </div>
         <button type="submit" class="btn text-white bg-dark mt-3">Add Project</button>
@@ -49,24 +52,28 @@ var_dump($loggedInUser);
 
     <h4 class="mt-5">All Your Projects</h4>
     <div class="accordion mt-3" id="accordionExample">
+        <?php 
+        if (gettype($userProjects) == "array"):
+            for ($i = 0; $i < count($userProjects); $i++): 
+            $project = $userProjects[$i];
+        ?>
         <div class="accordion-item">
-            <h2 class="accordion-header" id="headingOne">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
-                    aria-expanded="true" aria-controls="collapseOne">
-                    Accordion Item #1
+            <h2 class="accordion-header"  id="headingOne<?php echo $i; ?>">
+                <button class="accordion-button <?php echo $i != 0 ? "collapsed" : null; ?>" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapse<?php echo $i; ?>" aria-expanded="true"
+                    aria-controls="collapse<?php echo $i; ?>">
+                    <?php echo $project->name; ?>
                 </button>
             </h2>
-            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+            <div id="collapse<?php echo $i; ?>"
+                class="accordion-collapse collapse <?php echo $i == 0 ? "show" : null; ?>"
+                aria-labelledby="headingOne<?php echo $i; ?>"
                 data-bs-parent="#accordionExample">
                 <div class="accordion-body">
-                    <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse
-                    plugin adds the appropriate classes that we use to style each element. These classes control the
-                    overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of
-                    this with custom CSS or overriding our default variables. It's also worth noting that just about any
-                    HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                    <?php echo $project->description; ?>
                 </div>
                 <div class="border m-2 p-2 d-flex justify-content-between align-items-center">
-                    <div>Completed: <strong>Yes</strong></div>
+                    <div>Completed: <strong><?php echo $project->completed ? "Yes" : "No" ?></strong></div>
                     <div>
                         <a href="#" class="btn btn-outline-danger border-0 py-0 px-1"><i class="bi bi-trash"></i></a>
                         <a href="#" class="btn btn-outline-danger border-0 py-0 px-1"><i class="bi bi-trash"></i></a>
@@ -74,43 +81,9 @@ var_dump($loggedInUser);
                 </div>
             </div>
         </div>
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingTwo">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                    Accordion Item #2
-                </button>
-            </h2>
-            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
-                data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                    <strong>This is the second item's accordion body.</strong> It is hidden by default, until the
-                    collapse plugin adds the appropriate classes that we use to style each element. These classes
-                    control the overall appearance, as well as the showing and hiding via CSS transitions. You can
-                    modify any of this with custom CSS or overriding our default variables. It's also worth noting that
-                    just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit
-                    overflow.
-                </div>
-            </div>
-        </div>
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="headingThree">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                    Accordion Item #3
-                </button>
-            </h2>
-            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
-                data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                    <strong>This is the third item's accordion body.</strong> It is hidden by default, until the
-                    collapse plugin adds the appropriate classes that we use to style each element. These classes
-                    control the overall appearance, as well as the showing and hiding via CSS transitions. You can
-                    modify any of this with custom CSS or overriding our default variables. It's also worth noting that
-                    just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit
-                    overflow.
-                </div>
-            </div>
-        </div>
+        <?php
+            endfor;
+        endif;
+        ?>
     </div>
 </div>

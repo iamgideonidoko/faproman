@@ -97,9 +97,8 @@ class Fauna {
 
     public static function createNewProject(string $userId, string $name, string $description, bool $completed): string | object {
         try {
-            $mutation = (new Mutation('createProject'))
-                ->setArguments(['data' => new RawObject('{name: "' . $name . '", description: "' . $description . '", completed: ' . $completed . ', owner: { connect: "' . $userId . '" } }')])
-                // ->setArguments(['data' => ['name' => $name, 'description' => $description, 'completed' => $completed, 'owner' => new RawObject('{ connect: "' . $userId . '" }')]])
+            $mutation = (new Mutation('createNewProject'))
+                ->setArguments(['name' => $name, 'description' => $description, 'completed' => $completed, 'owner_id' => $userId])
                 ->setSelectionSet(
                     [
                         '_id',
@@ -110,7 +109,28 @@ class Fauna {
                     ]
                 );
             $result = self::getClient()->runQuery($mutation);
-            return $result->getData()->createUser;
+            return $result->getData()->createNewProject;
+        } catch(Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public static function getProjectsByUser(string $id): string | array {
+        try {
+            $gql = (new Query('findProjectsByUserId'))
+                ->setArguments(['owner_id' => $id])
+                ->setSelectionSet(
+                    [
+                        '_id',
+                        '_ts',
+                        'name',
+                        'description',
+                        'completed',
+                        'create_timestamp'
+                    ]
+                );
+            $result = self::getClient()->runQuery($gql);
+            return $result->getData()->findProjectsByUserId;
         } catch(Exception $e) {
             return $e->getMessage();
         }

@@ -19,6 +19,23 @@ type Project {
 
 
 type Query {
-  all_users: [User]! @resolver(name: "findAllUsers", paginated: true)
-  findUserByUsername(username: String!): User @resolver(name: "findUserByUsername")
+    findUserByUsername(username: String!): User @resolver(name: "findUserByUsername")
+    findProjectsByUserId(owner_id: ID!): [Project] @resolver(name: "findProjectsByUserId")
+}
+
+type Mutation {
+    createNewProject(
+        owner_id: ID!
+        name: String!
+        description: String!
+        completed: Boolean,
+        create_timestamp: Long
+    ): Project @resolver(name: "createNewProject")
+
+    createNewUser(
+        username: String!
+        password: String!
+        create_timestamp: Long
+    ): User @resolver(name: "createNewUser")
+
 }

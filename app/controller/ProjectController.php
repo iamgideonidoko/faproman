@@ -31,15 +31,13 @@ class ProjectController {
 
         $newProject = Fauna::createNewProject($userId, $name, $description, $completed);
 
-        var_dump($newProject);
-
         if (gettype($newProject) == 'string') {
             array_push($errorMsgs, 'Something went wrong');
             $_SESSION['project_errors'] = $errorMsgs;
-            // return header('Location: /register');
+            return header('Location: /register');
         }
 
-        // return header('Location: /');        
+        return header('Location: /');        
     }
     
 }
