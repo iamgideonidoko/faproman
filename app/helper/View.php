@@ -21,6 +21,7 @@ class View {
         // extract the parameters into variables
         extract($parameters, EXTR_SKIP);
         require_once(self::$tempPath . 'header.php');
+        require_once(self::$tempPath . 'nav.php');
         require_once(self::$path . $view);
         require_once(self::$tempPath . 'footer.php');
     }

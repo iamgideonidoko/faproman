@@ -5,15 +5,25 @@ use \App\Helper\View;
 use \App\Lib\Fauna;
 
 class UserController {
+    // default time to live
+    private $ttl = 30;
 
-     // show login form
-     public function login() {
+    // show login form
+    public function login() {
         View::render('login.php', array(), 'Login - Faproman');
     }
 
     // show register form
     public function register() {
         View::render('register.php', array(), 'Register - Faproman');
+    }
+
+    // logout user
+    public function logout() {
+        // clear session
+        session_unset();   
+        session_destroy();
+        header('Location: /login');
     }
 
     // create new user
@@ -29,7 +39,7 @@ class UserController {
             return header('Location: /register');
         } 
 
-        $newUser = Fauna::createNewUser(strtolower($_POST['username']), $_POST['password1'], time());
+        $newUser = Fauna::createNewUser(strtolower($_POST['username']), password_hash($_POST['password1'], PASSWORD_DEFAULT), time());
 
         if (gettype($newUser) == 'string') {
             preg_match('/not unique/i', $newUser) ? array_push($errorMsgs, 'Username is taken, use another') : array_push($errorMsgs, 'Something went wrong');
@@ -37,26 +47,14 @@ class UserController {
             return header('Location: /register');
         }
 
-        echo '$newUser => ';
+        $_SESSION['logged_in_user'] = $newUser;
+        $_SESSION['ttl'] = $this->ttl;
 
-        var_dump($newUser);
-
-        echo '<br>';
-        echo '<br>';
-        echo 'new user type => ', gettype($newUser);
-        echo '<br>';
-        echo '<br>';
-        echo 'id of user', $newUser->_id;
-        echo '<br>';
-        echo '<br>';
-
-        print_r($newUser);
-
-        
+        return header('Location: /');        
     }
     
 
-    // create new user
+    // login user
     public function authenticate() {
         $errorMsgs = array();
         if (empty($_POST['username'])) array_push($errorMsgs, 'Username is required');
@@ -68,9 +66,26 @@ class UserController {
             return header('Location: /login');
         } 
         
-        echo 'Input from login form';
-        
-        var_dump($_POST);
+        $user = Fauna::getUserByUsername($_POST['username']);
+
+        // verify that user exist
+        if (gettype($user) == 'string') {
+            preg_match('/not found/i', $user) ? array_push($errorMsgs, 'Username or password is incorrect') : array_push($errorMsgs, 'Something went wrong');
+            $_SESSION['login_errors'] = $errorMsgs;
+            return header('Location: /login');
+        }
+
+        // verify that passowrd is correct
+        if (!password_verify($_POST['password'], $user->password)) {
+            array_push($errorMsgs, 'Username or password is incorrect');
+            $_SESSION['login_errors'] = $errorMsgs;
+            return header('Location: /login');
+        }
+
+        $_SESSION['logged_in_user'] = $user;
+        $_SESSION['ttl'] = $this->ttl;
+
+        return header('Location: /'); 
     }
     
 }

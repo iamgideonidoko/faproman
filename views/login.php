@@ -1,12 +1,11 @@
 <?php 
-use \App\Lib\Fauna;
-
 if (isset($_SESSION['login_errors'])) {
     $loginErrors = $_SESSION['login_errors'];
     unset($_SESSION['login_errors']);
 }
-
-var_dump(Fauna::getAllUsers());
+if (isset($_SESSION['logged_in_user'])) {
+    header('Location: /');
+}
 ?>
 
 <div class="container my-5 text-center">

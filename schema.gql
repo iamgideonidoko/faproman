@@ -19,4 +19,5 @@ type Project {
 
 type Query {
   all_users: [User]! @resolver(name: "findAllUsers", paginated: true)
+  findUserByUsername(username: String!): User @resolver(name: "findUserByUsername")
 }

@@ -69,7 +69,27 @@ class Fauna {
                     ]
                 );
             $result = self::getClient()->runQuery($mutation);
-            return $result->getData();
+            return $result->getData()->createUser;
+        } catch(Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public static function getUserByUsername(string $username): string | object {
+        try {
+            $gql = (new Query('findUserByUsername'))
+                ->setArguments(['username' => $username])
+                ->setSelectionSet(
+                    [
+                        '_id',
+                        '_ts',
+                        'username',
+                        'password',
+                        'create_timestamp'
+                    ]
+                );
+            $result = self::getClient()->runQuery($gql);
+            return $result->getData()->findUserByUsername;
         } catch(Exception $e) {
             return $e->getMessage();
         }

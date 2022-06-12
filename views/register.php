@@ -3,6 +3,9 @@ if (isset($_SESSION['register_errors'])) {
     $regErrors = $_SESSION['register_errors'];
     unset($_SESSION['register_errors']);
 }
+if (isset($_SESSION['logged_in_user'])) {
+    header('Location: /');
+}
 ?>
 
 <div class="container my-5 text-center">

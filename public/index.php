@@ -8,6 +8,21 @@ require __DIR__ . '/../vendor/autoload.php';
 use \App\Controller\ProjectController;
 use \App\Controller\UserController;
 
+// if user is logged in but inactive for given TTL time then logout user
+if (
+    isset($_SESSION['logged_in_user']) && 
+    isset($_SESSION['ttl']) && 
+    isset($_SESSION['last_activity']) && 
+    (time() - $_SESSION['last_activity'] > ($_SESSION['ttl'] * 60))
+) {
+    session_unset();
+    session_destroy();
+    header('Location: /login');    
+} 
+    
+// record current time
+$_SESSION['last_activity'] = time();
+
 $router = new AltoRouter();
 
 // routes
@@ -15,6 +30,7 @@ $router->addRoutes(array(
     array('GET','/', array(new ProjectController, 'index')),
     array('GET','/login', array(new UserController, 'login')),
     array('GET','/register', array(new UserController, 'register')),
+    array('GET','/logout', array(new UserController, 'logout')),
     array('POST','/user/create', array(new UserController, 'create')),
     array('POST','/user/authenticate', array(new UserController, 'authenticate')),
 ));
