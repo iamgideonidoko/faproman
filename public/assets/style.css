@@ -18,3 +18,15 @@ body {
 	-ms-border-radius: 4px;
 	-o-border-radius: 4px;
 }
+
+.page-404 {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100vh;
+	width: 100vw;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 35px;
+}

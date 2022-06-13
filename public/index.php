@@ -7,6 +7,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use \App\Controller\ProjectController;
 use \App\Controller\UserController;
+use \App\Helper\View;
 
 // if user is logged in but inactive for given TTL time then logout user
 if (
@@ -50,5 +51,5 @@ if( is_array($match) && is_callable( $match['target'] ) ) {
 } else {
 	// no route was matched
     header("HTTP/1.0 404 Not Found");
-    echo '404 - page not found';
+    View::render404();
 }

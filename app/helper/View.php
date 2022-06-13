@@ -25,5 +25,13 @@ class View {
         require_once(self::$path . $view);
         require_once(self::$tempPath . 'footer.php');
     }
+
+    public static function render404() {
+        // make page title available
+        $pageTitle = '404 | Not Found - Faproman';
+        require_once(self::$tempPath . 'header.php');
+        require_once(self::$tempPath . '404.php');
+        require_once(self::$tempPath . 'footer.php');
+    }
     
 }
