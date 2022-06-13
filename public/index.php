@@ -28,6 +28,7 @@ $router = new AltoRouter();
 // routes
 $router->addRoutes(array(
     array('GET','/', array(new ProjectController, 'index')),
+    array('GET','/edit/[i:id]', array(new ProjectController, 'edit')),
     array('GET','/login', array(new UserController, 'login')),
     array('GET','/register', array(new UserController, 'register')),
     array('GET','/logout', array(new UserController, 'logout')),

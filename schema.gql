@@ -38,4 +38,14 @@ type Mutation {
         create_timestamp: Long
     ): User @resolver(name: "createNewUser")
 
+    deleteSingleProject(id: ID!): Project @resolver(name: "deleteSingleProject")
+
+    updateSingleProject(
+        project_id: ID!
+        name: String!
+        description: String!
+        completed: Boolean,
+        create_timestamp: Long
+    ): Project @resolver(name: "updateSingleProject")
+
 }

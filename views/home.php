@@ -51,7 +51,8 @@ $userProjects = Fauna::getProjectsByUser($loggedInUser->_id);
     </form>
 
     <h4 class="mt-5">All Your Projects</h4>
-    <div class="accordion mt-3" id="accordionExample">
+    <p><?php echo "No of projects: " . count($userProjects); ?></p>
+    <div class="accordion my-3 mb-5" id="accordionExample">
         <?php 
         if (gettype($userProjects) == "array"):
             for ($i = 0; $i < count($userProjects); $i++): 
@@ -74,9 +75,12 @@ $userProjects = Fauna::getProjectsByUser($loggedInUser->_id);
                 </div>
                 <div class="border m-2 p-2 d-flex justify-content-between align-items-center">
                     <div>Completed: <strong><?php echo $project->completed ? "Yes" : "No" ?></strong></div>
-                    <div>
-                        <a href="#" class="btn btn-outline-danger border-0 py-0 px-1"><i class="bi bi-trash"></i></a>
-                        <a href="#" class="btn btn-outline-danger border-0 py-0 px-1"><i class="bi bi-trash"></i></a>
+                    <div class="d-flex">
+                        <a href="/edit/<?php echo $project->_id ?>" class="btn btn-outline-dark border-0 py-0 px-1 me-1"><i class="bi bi-pencil-square"></i></a>
+                        <form action="/project/delete" method="post">
+                            <input type="hidden" name="project_id" value="<?php echo $project->_id ?>">
+                            <button type="submit" class="btn btn-outline-danger border-0 py-0 px-1"><i class="bi bi-trash"></i></button>
+                        </form>
                     </div>
                 </div>
             </div>

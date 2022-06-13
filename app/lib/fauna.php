@@ -135,6 +135,67 @@ class Fauna {
             return $e->getMessage();
         }
     }
+
+    public static function updateExistingProject(string $projectId, string $name, string $description, bool $completed): string | object {
+        try {
+            $mutation = (new Mutation('updateSingleProject'))
+                ->setArguments(['project_id' => $projectId, 'name' => $name, 'description' => $description, 'completed' => $completed])
+                ->setSelectionSet(
+                    [
+                        '_id',
+                        '_ts',
+                        'name',
+                        'description',
+                        'completed'
+                    ]
+                );
+            $result = self::getClient()->runQuery($mutation);
+            return $result->getData()->updateSingleProject;
+        } catch(Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public static function deleteExistingProject(string $projectId): string | object {
+        try {
+            $mutation = (new Mutation('deleteSingleProject'))
+                ->setArguments(['id' => $projectId])
+                ->setSelectionSet(
+                    [
+                        '_id',
+                        '_ts',
+                        'name',
+                        'description',
+                        'completed'
+                    ]
+                );
+            $result = self::getClient()->runQuery($mutation);
+            return $result->getData()->deleteSingleProject;
+        } catch(Exception $e) {
+            return $e->getMessage();
+        }
+    }
+
+    public static function getSingleProjectByUser(string $projectId): string | object | null {
+        try {
+            $gql = (new Query('findProjectByID'))
+                ->setArguments(['id' => $projectId])
+                ->setSelectionSet(
+                    [
+                        '_id',
+                        '_ts',
+                        'name',
+                        'description',
+                        'completed',
+                        'create_timestamp'
+                    ]
+                );
+            $result = self::getClient()->runQuery($gql);
+            return $result->getData()->findProjectByID;
+        } catch(Exception $e) {
+            return $e->getMessage();
+        }
+    }
 }
 
 
